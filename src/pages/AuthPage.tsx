@@ -53,6 +53,7 @@ export function AuthPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg animate-pop">
+      <img src="/logo.png" alt="" className="mb-4 h-24 w-24 rounded-[1.6rem]" />
       <p className="font-display text-5xl font-extrabold">PlayLeague</p>
       <p className="mt-1 text-muted">Entra con tu cuenta para jugar. La primera vez te lo pedimos; después sigues dentro.</p>
       <div className="mt-5 grid grid-cols-3 gap-2">

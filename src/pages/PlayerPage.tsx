@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { friendCard, removeFriend } from '../lib/api'
 import { LEAGUE_MARK } from '../lib/leagues'
+import { RankBoard } from '../components/Ranks'
 import { Banner, Button } from '../components/ui'
 import type { PlayerCard } from '../types'
 
@@ -30,6 +31,7 @@ export function PlayerPage() {
         <p className="text-sm text-muted">{player.xp} XP</p>
         <p className="mt-2 font-bold" style={{ color: player.rank.color }}>{LEAGUE_MARK[player.rank.slug]} {player.rank.name}</p>
       </section>
+      <RankBoard rating={player.rating} detailed own={false} />
       <div className="grid grid-cols-3 gap-2">
         <Stat label="Victorias" value={player.wins} />
         <Stat label="Partidas" value={player.games} />

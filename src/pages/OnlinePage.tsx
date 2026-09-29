@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useAuth } from '../auth/AuthProvider'
 import { createOnlineRoom, findRankedMatch, joinOnlineRoom, leaveOnlineRoom } from '../lib/api'
+import { RankBoard } from '../components/Ranks'
 import { Banner, Button } from '../components/ui'
 import type { OnlineMode } from '../types'
 
@@ -15,6 +17,7 @@ function isMode(value: string | null): value is OnlineMode {
 }
 
 export function OnlinePage() {
+  const { profile } = useAuth()
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
   const searching = isMode(params.get('cola')) ? params.get('cola') : null
@@ -106,6 +109,9 @@ export function OnlinePage() {
       <p className="text-sm font-semibold uppercase tracking-[0.2em] text-quick">Competición</p>
       <h1 className="font-display text-5xl font-extrabold leading-none">Online</h1>
       <p className="mt-2 text-muted">Juega contra gente que esté buscando partida en este momento.</p>
+      <div className="mt-4">
+        <RankBoard rating={profile?.profile.rating ?? 0} />
+      </div>
       <div className="mt-5 grid gap-3">
         {modes.map((mode) => (
           <button

@@ -9,8 +9,13 @@ export function HomePage() {
   const { profile } = useAuth()
   return (
     <div className="mx-auto w-full max-w-lg animate-pop">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-quick">La quedada</p>
-      <h1 className="font-display text-5xl font-extrabold leading-none">PlayLeague</h1>
+      <div className="flex items-center gap-3">
+        <img src="/logo.png" alt="" className="h-16 w-16 rounded-2xl" />
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-quick">La quedada</p>
+          <h1 className="font-display text-5xl font-extrabold leading-none">PlayLeague</h1>
+        </div>
+      </div>
       <p className="mt-2 text-lg text-muted">
         Hola {profile?.profile.display_name ?? 'anfitrión'}. Elige un juego y pasa el móvil.
       </p>

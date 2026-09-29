@@ -43,4 +43,38 @@ export const LEAGUE_MARK: Record<string, string> = {
   desafiante: '🔥',
 }
 
-export const RANK_ORDER = ['hierro', 'bronce', 'plata', 'oro', 'platino', 'esmeralda', 'diamante', 'maestro', 'gran_maestro', 'desafiante']
+export const RANKS = [
+  { slug: 'hierro', name: 'Hierro', floor: 0, color: '#8d8d97' },
+  { slug: 'bronce', name: 'Bronce', floor: 100, color: '#e09756' },
+  { slug: 'plata', name: 'Plata', floor: 250, color: '#d7deea' },
+  { slug: 'oro', name: 'Oro', floor: 450, color: '#ffc53d' },
+  { slug: 'platino', name: 'Platino', floor: 700, color: '#5eead4' },
+  { slug: 'esmeralda', name: 'Esmeralda', floor: 1000, color: '#34d399' },
+  { slug: 'diamante', name: 'Diamante', floor: 1400, color: '#7ee0ff' },
+  { slug: 'maestro', name: 'Maestro', floor: 1900, color: '#c4b5fd' },
+  { slug: 'gran_maestro', name: 'Gran Maestro', floor: 2500, color: '#f0abfc' },
+  { slug: 'desafiante', name: 'Desafiante', floor: 3200, color: '#f5d76e' },
+] as const
+
+export const RANK_ORDER: string[] = RANKS.map((rank) => rank.slug)
+
+export function rankProgress(rating: number) {
+  const points = Math.max(0, rating)
+  let index = 0
+  for (let i = 0; i < RANKS.length; i += 1) {
+    if (points >= RANKS[i].floor) index = i
+  }
+  const current = RANKS[index]
+  const next = RANKS[index + 1]
+  const span = next ? next.floor - current.floor : 1
+  const ratio = next ? Math.min(1, Math.max(0, (points - current.floor) / span)) : 1
+  return {
+    current,
+    next,
+    index,
+    total: RANKS.length,
+    left: next ? next.floor - points : 0,
+    ratio,
+    points,
+  }
+}

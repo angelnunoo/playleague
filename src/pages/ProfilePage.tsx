@@ -6,6 +6,7 @@ import { myRecent } from '../lib/api'
 import { AVATARS, GAMES } from '../lib/games'
 import { BANNER_NAMES, BANNERS, FRAME_NAMES, FRAMES, LEAGUE_MARK, RANK_ORDER } from '../lib/leagues'
 import { setSoundEnabled, soundEnabled } from '../lib/sound'
+import { RankBoard } from '../components/Ranks'
 import { Banner, Button, Progress } from '../components/ui'
 import type { GameType, RecentMatch } from '../types'
 
@@ -73,8 +74,6 @@ export function ProfilePage() {
   const rate = played ? Math.round((wins / played) * 100) : 0
   const league = profile.league ?? { slug: 'hierro', name: 'Hierro', floor: 0, ceil: 100, color: '#8d8d97' }
   const rating = profile.profile.rating ?? 0
-  const leagueSpan = Math.max(1, league.ceil - league.floor)
-  const leagueRatio = league.slug === 'desafiante' ? 1 : Math.min(1, Math.max(0, (rating - league.floor) / leagueSpan))
   const favorites = (['quiz', 'impostor', 'taboo', 'quick'] as GameType[])
     .map((id) => ({ id, played: stats[`${id}_played`] ?? 0 }))
     .filter((item) => item.played > 0)
@@ -149,17 +148,9 @@ export function ProfilePage() {
           <div className="mt-4">
             <Progress xp={profile.progress.xp} floor={profile.progress.floor} ceil={profile.progress.ceil} level={profile.progress.level} />
           </div>
-          <div className="mt-3">
-            <div className="mb-1 flex justify-between text-xs font-semibold">
-              <span>Puntos {rating}</span>
-              <span>{league.slug === 'desafiante' ? 'Rango máximo' : `${league.ceil} para subir`}</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full" style={{ width: `${leagueRatio * 100}%`, background: league.color }} />
-            </div>
-          </div>
         </div>
       </section>
+      <RankBoard rating={rating} detailed />
 
       <div className="grid grid-cols-3 gap-2">
         <Stat label="Partidas" value={played} />

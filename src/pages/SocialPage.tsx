@@ -1,7 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../auth/AuthProvider'
+import { whatsappInvite } from './InvitePage'
 import { friendsRanking, removeFriend, respondFriendRequest, searchPlayers, sendFriendRequest, socialHome } from '../lib/api'
 import { LEAGUE_MARK } from '../lib/leagues'
+import { RankBoard } from '../components/Ranks'
 import { Banner, Button } from '../components/ui'
 import type { FriendRanking, PlayerCard, SocialHome } from '../types'
 
@@ -25,6 +28,7 @@ export function SocialPage() {
 }
 
 function Friends() {
+  const { profile } = useAuth()
   const [home, setHome] = useState<SocialHome | null>(null)
   const [query, setQuery] = useState('')
   const [found, setFound] = useState<PlayerCard[]>([])
@@ -61,8 +65,24 @@ function Friends() {
     }
   }
 
+  const me = profile?.profile
+  const inviteHref = me ? whatsappInvite(me.username, me.display_name) : ''
+
   return (
     <div className="grid gap-4">
+      <section className="card grid gap-3 p-4">
+        <h2 className="font-display text-2xl font-extrabold">Invitar por WhatsApp</h2>
+        <p className="text-sm text-muted">Le llega tu enlace. Cuando entre, te envía la solicitud y la aceptas aquí.</p>
+        <a
+          href={inviteHref || undefined}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled={!inviteHref}
+          className={`touch grid place-items-center bg-[#25D366] text-center text-ink ${inviteHref ? '' : 'pointer-events-none opacity-50'}`}
+        >
+          Enviar solicitud por WhatsApp
+        </a>
+      </section>
       <input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
@@ -116,6 +136,7 @@ function Friends() {
 }
 
 function Ranking() {
+  const { profile } = useAuth()
   const [sort, setSort] = useState<FriendRanking['sort']>('xp')
   const [board, setBoard] = useState<FriendRanking | null>(null)
   const [error, setError] = useState('')
@@ -141,6 +162,7 @@ function Ranking() {
   const medals = ['🥇', '🥈', '🥉']
   return (
     <div className="grid gap-3">
+      <RankBoard rating={profile?.profile.rating ?? 0} detailed />
       <div className="grid grid-cols-3 gap-2">
         {([['xp', 'XP'], ['level', 'Nivel'], ['wins', 'Victorias']] as const).map(([id, label]) => (
           <button key={id} type="button" onClick={() => setSort(id)} className={`rounded-2xl px-3 py-3 text-sm font-bold ${sort === id ? 'bg-white text-ink' : 'bg-white/10'}`}>{label}</button>
